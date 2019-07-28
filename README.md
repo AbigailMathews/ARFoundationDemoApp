@@ -29,8 +29,9 @@ The concept for this app is that you can place some seedlings in your environmen
 
 *Your Hierarchy should appear like this after adding the AR Session and AR Session Origin prefabs*
 
+---
 
-###Build Your App to Your Device
+### Build Your App to Your Device
 
 You can now build your empty AR scene and you will see the camera output to the screen. Even if you want to skip the build step, it's a good time to get your Build Settings straightened out.
 
@@ -55,7 +56,7 @@ You can now build your empty AR scene and you will see the camera output to the 
 
 You'll also want to change your Company Name and Product Name at the top of the Player Settings window.
 
-Now, you can try building your app if you'd like. Even though it looks like you're seeing just the 
+Now, you can try building your app if you'd like. Even though it looks like you're seeing just the device camera rendering directly to your phone's screen, ARFoundation is doing a lot behind the scenes. We'll see how to visualize this in the next section.
 
 ----
 
