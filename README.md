@@ -25,7 +25,7 @@ The concept for this app is that you can place some seedlings in your environmen
 4. Right-click in the Hierarchy, and select `XR > AR Session` from the context menu.
 5. Right-click in the Hierarchy, select `XR > AR Session Origin` from the context menu.
 
-![Hierarchy View]('./images/emptyARScene.png')
+![Hierarchy View](images/emptyARScene.png)
 *Your Hierarchy should appear like this after adding the AR Session and AR Session Origin prefabs*
 
 ###Build Your App to Your Device
