@@ -1,5 +1,9 @@
 # AR Foundations Demo App
 
+This is a tutorial and resources for getting started building AR apps with Unity's AR Foundation plugin. You can follow along with this tutorial in your own project, and make use of the art assets included in the plants.unitypackage, or you can jump in at any stage of the project by opening the included Unity project and choosing the scenes labeled 'Step1-Setup', etc. The final stage of the tutorial is represented in the FlowerPower scene.
+
+This tutorial presumes a moderate level of familiarity with Unity.
+
 ----
 ## Resources
 [AR Foundations Sample Apps by Unity](https://github.com/Unity-Technologies/arfoundation-samples)
@@ -113,4 +117,58 @@ Now if you build your project to your device, you should see a mesh of triangles
 
 ---
 
+### Placing objects in our AR environment
 
+Now that we can detect planes, let's place a virtual object on the plane. I've included some starter assets in keeping with the gardening theme of the app, if you'd like to use them.
+
+1. Import the `plants.unitypackage` included in this repo by selecting `Assets > Import Package > Custom Package...` and navigating to the plants.unitypackage.
+
+There are two ways to capture ray hits on a detected plane or point surface: 
+```
+public bool Raycast(Vector2 screenPoint, List<ARRaycastHit> hitResults, TrackableType trackableTypeMask = TrackableType.All);
+
+public bool Raycast(Ray ray, List<ARRaycastHit> hitResults, TrackableType trackableTypeMask = TrackableType.All, float pointCloudRaycastAngleInDegrees = 5f);
+```
+We're going to use the first, simpler version which is fine for casting rays from touch events on the screen.
+
+2. Add an `ARRaycastManager` script component to the ARSessionOrigin.
+
+![Raycast Manager](images/raycast.jpg)
+
+*We need the raycast manager to be present on the Session Origin object to detect hits on the plane.*
+
+3. Create an empty game object in the Hierarchy to use as a Game Manager -- I called mine 'FlowerManager'. Add a script component to your manager object (I also called mine FlowerManager.cs) & open it in MonoDevelop or VisualStudio.
+
+4. In the script, add `using UnityEngine.XR.ARFoundation` so we don't have to prefix everything.
+
+5. Let's get references to the prefab we want to place as well as our ARSessionOrigin. We also need a place to store a reference to the ARRaycastManager and our special ARRaycast hits:
+```
+[SerializeField] GameObject flowerPrefab;
+[SerializeField] ARSessionOrigin arSessionOrigin;
+
+ARRaycastManager arRaycastManager;
+
+static List<ARRaycastHit> hits = new List<ARRaycastHit>();
+
+void Start() {
+ arRaycastManager = arSessionOrigin.GetComponent<ARRaycastManager>();
+}
+```
+
+5. We'll check for a touch on the screen, and if we detect one we'll cast a ray and place a prefab at the hit point on the detected plane. 
+
+```
+void Update() {
+ Touch touch = Input.GetTouch(0); // Just get the first touch
+ 
+ if (arRaycastManager.Raycast(touch.position, hits, TrackableType.PlaneWithinPolygon) {
+  Pose hitPose = hits[0].pose; // There can be multiple hits (potentially overlapping planes) -- just get the top-most
+  
+  Instantiate(flowerPrefab, hitPose.position, hitPose.rotation);
+ }
+}
+```
+
+6. Assign the ARSessionOrigin object and the FlowerPrefab fields in the Inspector.
+
+Now, if we build and run the app, you should be able to place flowers on detected planes.
