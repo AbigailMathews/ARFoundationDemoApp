@@ -172,3 +172,77 @@ void Update() {
 7. Assign the ARSessionOrigin object and the FlowerPrefab fields in the Inspector.
 
 Now, if we build and run the app, you should be able to place flowers on detected planes.
+
+---
+
+### UI and Interaction with Virtual Objects
+
+In this section, we'll create a simple UI with a button that will spawn a raindrop prefab we'll use to 'water' our virtual plant. If you've started with a seedling prefab, this is a chance to have it 'grow' into the other prefabs with appropriate watering. 
+
+1. Add a Canvas and an Event System to the Hierarchy (Right-click the Hierarchy and select `UI > Canvas` and both should show up.
+
+2. With the Canvas selected, create a button (Right-click then select `UI > Button`). It's a good time to change the preview resolution/orientation of the Game window now, by changing the drop-down from the default 'Free Aspect' to `1920 x 1080 Portrait` or similar, so that we can get a good idea about how this might end up looking on the device. Note that we'd ideally likely want to adjust our UI setup for landscape as well, but for now we're doing the simple thing for demo purposes. 
+
+![Aspect Ratio](images/aspectratio.jpg)
+
+*Adjust the aspect ratio used by the Game window so that you can better position your button.*
+
+
+3. Adjust your button to your liking. Since it's a water button, I made mine blue and moved it to the bottom center of the screen. You'll also want to make the button much larger since you want the user to be able to easily hit it. Pick a nice icon if you want to get fancy.
+
+![Button setup](images/button.jpg)
+
+*My Hierarchy and Game window with the button created and 'styled' slightly.*
+
+4. Set up the script to detect UI hits and spawn a raindrop prefab. For convenience, I added all raindrop code to the FlowerManager script, but if you'd like to separate it out, do so. We're going to spawn the raindrops from the center of the Camera, so, first we need a reference to the Camera. Add `using UnityEngine.EventSystems` to the top of the file. In your variable declarations, add the line `Camera cameraOrigin;` and in the Start() method add `cameraOrigin = arSessionOrigin.GetComponentInChildren<Camera>();`. We also need a reference to a 'Raindrop Prefab', so add that too -- `[SerializeField] GameObject raindropPrefab;`.
+
+5. Add a new method that we'll fire when the button is pressed:
+```
+public void ShootRaindrop() {
+ GameObject newRaindrop = Instantiate<GameObject>(raindropPrefab);
+ newRaindrop.transform.position = cameraOrigin.transform.position; // 'Shoot' the raindrop from the camera (user's) position
+ Rigidbody rb = newRaindrop.GetComponent<Rigidbody>();
+ rb.AddForce(1000 * cameraOrigin.transform.forward); // Modify this until it seems about right.
+}
+```
+
+6. Create a 'raindrop' prefab. Mine is just a blue sphere. Maybe yours will be better. It needs a Collider and a Rigidbody. You will probably also want to scale it down quite a bit -- keep in mind that one Unity unit represents 1 meter in the 'real world'. So if you place a default Unity sphere in an AR scene, it will be 1 meter across. When you're happy, make your raindrop into a prefab and drag it into the Raindrop prefab field of the FlowerManager script component. 
+
+7. Hook up the ShootRaindrop() function to the button's onClick event:
+
+![Button Click event setup](images/buttonevent.jpg)
+
+*Select your new ShootRaindrop() function as the target function to execute on the button's click event.*
+
+If you built your project now, you'd discover that your raindrops were spawning correctly, but that you would also spawn another flower with each tap on the Water button. This is because the raycast used by the ARRaycastManager is still firing, despite the fact that we've had a UI hit. So, let's add some code to check whether we're over a UI element (or any other game object) and not spawn a flower if so.
+
+8. Add a new method to detect whether the screen touch is over UI or not:
+```
+private bool isTouchOverUI(Vector2 pos) {
+ if (EventSystem.current == null) return false; // We should always have a Event System in place if we have a Canvas/any UI
+ 
+ PointerEventData eventDataCurrentPosition = new PointerEventData(EventSystem.current);
+ 
+ eventDataCurrentPosition.position = new Vector2(pos.x, pos.y);
+ List<RaycastResult> results = new List<RaycastResult>();
+ EventSystem.current.RaycastAll(eventDataCurrentPosition, results); // Cast from the current position and collect any hits
+ return results.Count > 0; // We have hit at least one UI object
+}
+```
+Now modify the inner `if` statement in the Update() method to read:
+`if (arRaycastManager.Raycast(touch.position, hits, TrackableType.PlaneWithinPolygon) && !isTouchOverUI(touch.position))`
+
+Now we should spawn only the Raindrop prefab and not the Flower when we press the button.
+
+---
+
+### Improvements
+
+There are a number of things you can do to make this app more fun or better from a UX perspective. Here are a few ideas:
+- Include better feedback about the state of the ARSession for the user. There are a number of Events that AR Foundation provides that we can subscribe to, to provide better user feedback.
+- Include a tutorial or some onboarding
+- Make proper use of the watering mechanic advance the state of the plant that's been watered (find out which plant has been hit and allow it to grow with proper watering).
+- Destroy the raindrop prefab and have a particle effect on impact
+- Create new plants
+- Create new mechanics -- weeding, plants with variable water/sunlight/etc. needs
+- Timing -- users must wait until watering/new plants/upgrades are available so that they pace out resources.
