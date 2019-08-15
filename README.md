@@ -60,3 +60,57 @@ Now, you can try building your app if you'd like. Even though it looks like you'
 
 ----
 
+### Plane and Point Detection
+
+Now we might want to be able to visualize the plane and point detection capabilities of AR Foundation. To do this, we will add some components to the ARSessionOrigin game object.
+
+1. Select the ARSession Origin in the Hierarchy, and then in the Inspector, click `Add Component` and then search for ARPlaneManager. Click to add the component to the game object.
+
+![Add components to ARSessionOrigin](images/planemanager)
+
+*Adding the ARPlaneManager script component to the ARSessionOrigin*
+
+2. With the ARSessionOrigin still selected, click `Add Component` again in the Inspector. This time, search for ARPointCloudManager, and add it to the game object as before.
+
+Your ARSessionOrigin object will now look like this:
+
+![ARSessionOrigin object](images/session.jpg)
+
+*ARSessionOrigin with both ARPlaneManager and ARPointCloudManager script components*
+
+You may have noticed there is also something called an ARReferencePointManager. Reference Points are added and managed manually by the developer, so even if we added an ARReferencePointManager to the SessionOrigin object, we wouldn't see anything unless we started adding points manually via script.
+
+Now we have the Managers in place on the Session Origin, but we still won't see anything until we assign something to the `Plane Prefab` field of the ARPlaneManager script and the `Point Cloud Prefab` of the ARPointCloudManager. You can create your own custom objects for these prefabs, but we'll use the default assets provided as part of AR Foundation.
+
+To create the prefabs, we first need to add the provided assets to our Hierarchy.
+
+3. Right click inside the Hierarchy and select `XR > AR Default Plane` to place an AR Default Plane object in the Hierarchy.
+
+![Adding a Default Plane to the Hierarchy](images/defaultplane.jpg)
+
+*Add an AR Default Plane game object to the Hierarchy by right clicking and selecting it from the dropdown*
+
+4. As above, right click inside the Hierarchy and select `XR > AR Default Point Cloud` to place an AR Default Point Cloud object in the Hierarchy.
+
+Now, we need to make these two new objects into prefabs.
+
+5. Drag the AR Default Plane and AR Default Point Cloud into the Assets folder (in the Project window), to transform them into prefabs. Once they are prefabs, you'll see that they appear as blue cubes in the Project window. The icons in the Hierarchy will have also changed to blue.
+
+![Create plane and point prefabs](images/prefabs.jpg)
+
+*Drag the plane and point game objects to the project window to make them into prefabs.*
+
+6. Once the prefabs are saved in the Assets folder, delete the two prefabs from the Hierarchy.
+
+7. Select the AR Session Origin object in the Hierarchy again. Drag the correct prefab from the Assets folder (Project Window) into the `Plane Prefab` field of the AR Plane Manager and the `Point Cloud Prefab` field of the AR Point Cloud Manager.
+
+![Prefabs in place](images/detection.jpg)
+
+*The ARSessionOrigin with the plane prefab and the point cloud prefab correctly assigned for plane and point detection/visualization.*
+
+
+Now if you build your project to your device, you should see a mesh of triangles depicting detected planes, as well as a bunch of points representing the point cloud.
+
+---
+
+
