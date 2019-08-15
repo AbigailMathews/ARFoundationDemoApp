@@ -234,6 +234,8 @@ Now modify the inner `if` statement in the Update() method to read:
 
 Now we should spawn only the Raindrop prefab and not the Flower when we press the button.
 
+9. Add some colliders to your flower prefabs. That way you can do something fun (like spawn a particle effect) when the raindrop hits the flower.
+
 ---
 
 ### Improvements
