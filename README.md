@@ -66,7 +66,7 @@ Now we might want to be able to visualize the plane and point detection capabili
 
 1. Select the ARSession Origin in the Hierarchy, and then in the Inspector, click `Add Component` and then search for ARPlaneManager. Click to add the component to the game object.
 
-![Add components to ARSessionOrigin](images/planemanager)
+![Add components to ARSessionOrigin](images/planemanager.jpg)
 
 *Adding the ARPlaneManager script component to the ARSessionOrigin*
 
