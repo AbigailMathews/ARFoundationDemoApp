@@ -139,7 +139,7 @@ We're going to use the first, simpler version which is fine for casting rays fro
 
 3. Create an empty game object in the Hierarchy to use as a Game Manager -- I called mine 'FlowerManager'. Add a script component to your manager object (I also called mine FlowerManager.cs) & open it in MonoDevelop or VisualStudio.
 
-4. In the script, add `using UnityEngine.XR.ARFoundation` so we don't have to prefix everything.
+4. In the script, add `using UnityEngine.XR.ARFoundation` as well as `using UnityEngine.XR.ARSubsystems` so we don't have to prefix everything.
 
 5. Let's get references to the prefab we want to place as well as our ARSessionOrigin. We also need a place to store a reference to the ARRaycastManager and our special ARRaycast hits:
 ```
@@ -155,7 +155,7 @@ void Start() {
 }
 ```
 
-5. We'll check for a touch on the screen, and if we detect one we'll cast a ray and place a prefab at the hit point on the detected plane. 
+6. We'll check for a touch on the screen, and if we detect one we'll cast a ray and place a prefab at the hit point on the detected plane. 
 
 ```
 void Update() {
@@ -169,6 +169,6 @@ void Update() {
 }
 ```
 
-6. Assign the ARSessionOrigin object and the FlowerPrefab fields in the Inspector.
+7. Assign the ARSessionOrigin object and the FlowerPrefab fields in the Inspector.
 
 Now, if we build and run the app, you should be able to place flowers on detected planes.
